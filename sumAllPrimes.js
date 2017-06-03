@@ -1,46 +1,49 @@
-//global primes to store primes number, so it can help in 
-//finding primes number
-var primes = [];
-
 /*
 *calculate given number is prime or not
 *@param - number
 *@return - boolean
 */
-var isPrime = function(num){
-  //number less than or equal one are not primes
-  if( num <= 1) return false;
+var isPrime = (function(){
+  var primes = [];
   
-  //one number is a factor of N and that it is smaller than the square-root of the number N
-  var sqrt = Math.sqrt(num);
-  var primesArrayIndex = 0;
-  //smallest factor of a number is a prime
-  for(var i = 2, j = Math.floor(sqrt); i <= j; primesArrayIndex >= primes.length ? i ++ : i = primes[primesArrayIndex]){
-    if(num % i === 0){
-      return false;
+  return function(num){
+    //number less than or equal one are not primes
+    if( num <= 1) return false;
+  
+    //if num is in primes array, skip calculation and return true
+    if(primes.indexOf(num) > -1) return true;
+    
+    //one number is a factor of N and that it is smaller than the square-root of the number N
+    var sqrt = Math.sqrt(num);
+    var primesArrayIndex = 0;
+    //smallest factor of a number is a prime
+    for(var i = 2, j = Math.floor(sqrt); i <= j; i = primesArrayIndex < primes.length ? primes[primesArrayIndex] : i + 1){
+      if(num % i === 0){
+        return false;
+      }
+      
+      //if i is a prime and it's not already in primes array, save to prime array
+      if(primesArrayIndex >= primes.length && isPrime(i)){
+        primes.push(i);  
+      } 
+      primesArrayIndex++;
     }
-    primesArrayIndex++;
-  }
-  return true;
-};
+    return true;  
+  };
+}());
 
 function sumPrimes(num) {
-  //save primes number locally, we can't use global primes array 
-  //here because, it can already have values from other function calls
-  var localPrimes = [];
+  var primes = [];
   for(var i = 0; i <= num; i++){
     if(isPrime(i)){
-      localPrimes.push(i);
-      if(primes[primes.length - 1] < i){
-        primes.push(i);
-      }
+      primes.push(i);
+      
     }    
   }
-  return localPrimes.reduce(function(a, b){
+  return primes.reduce(function(a, b){
     return a + b;
   }, 0);
 }
 
-//how to use
 sumPrimes(977);
 
